@@ -101,8 +101,14 @@
     @keyframes spin { 0% {transform:rotate(0);} 100% {transform:rotate(360deg);} }
     @keyframes warp { 50% {transform: skewX(20deg) scale(0.8);} }
 
-    .bounce-img { width: 100%; max-width: 260px; border-radius: 20px; animation: jelly 2s infinite; margin-top: 20px; }
-    @keyframes jelly { 0%, 100% {transform:scale(1);} 50% {transform:scale(1.05, 0.95) translateY(-5px);} }
+.bounce-img { 
+  width: 100%; 
+=  max-width: 200px; 
+=  object-fit: contain;
+  border-radius: 20px; 
+  animation: jelly 2s infinite; 
+  margin-top: 10px; 
+}    @keyframes jelly { 0%, 100% {transform:scale(1);} 50% {transform:scale(1.05, 0.95) translateY(-5px);} }
 
     .timer { font-size: 12px; color: #999; margin-top: 15px; font-family: monospace; }
   </style>
@@ -137,7 +143,7 @@
     <section id="view2" class="view-section hidden">
       <h2>Reasons Why... 📝</h2>
       <ul class="reasons-list">
-        <li onclick="this.classList.toggle('anim-shake')">EBad Jokes Expert</li>
+        <li onclick="this.classList.toggle('anim-shake')">Bad Jokes Expert</li>
         <li onclick="this.classList.toggle('anim-spin')">You look cute, I look okay. Balance.</li>
         <li onclick="this.classList.toggle('anim-warp')">Top-tier movie nights 🍿</li>
         <li>I'll always text back 📱</li>
@@ -148,7 +154,7 @@
         <li>Infinite supply of hugs 🤗</li>
         <li>I already said "Yes" in my head 💭</li>
       </ul>
-      <button id="backBtn" style="width:100%; background:var(--text); color:white; margin-top:10px;">Convince me more!</button>
+      <button id="backBtn" style="width:100%; background:var(--text); color:white; margin-top:10px;">I am convinced!</button>
     </section>
 
     <section id="view3" class="view-section hidden">
