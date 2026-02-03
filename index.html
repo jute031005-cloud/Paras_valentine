@@ -58,12 +58,11 @@
     .view-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
     .hidden { display: none !important; }
 
-    .art { width: 130px; margin-bottom: 10px; }
+    .art { width: 90px; margin-bottom: 5px; }
 
-    h1 { font-size: 1.6rem; margin: 10px 0; font-weight: 800; }
+    h1 { font-size: 1.5rem; margin: 5px 0 20px 0; font-weight: 800; z-index: 20; position:relative; }
 
-    /* Increased height slightly to give buttons more room to move */
-    .button-zone { position: relative; width: 100%; height: 200px; margin: 10px 0; }
+    .button-zone { position: relative; width: 100%; height: 220px; margin: 5px 0; }
 
     button {
       padding: 14px 28px;
@@ -80,7 +79,6 @@
     #yesBtn { background: var(--yes); color: white; z-index: 5; position: relative; }
     #noBtn { position: absolute; background: #f1f3f5; color: #71767b; font-size: 15px; z-index: 10; transition: left 0.1s, top 0.1s; }
 
-    /* The Pulsing Animation for the Yes Button */
     .pulse-yes {
       animation: heartBeat 0.8s infinite alternate !important;
       background: var(--yesHover) !important;
@@ -102,18 +100,20 @@
     @keyframes spin { 0% {transform:rotate(0);} 100% {transform:rotate(360deg);} }
     @keyframes warp { 50% {transform: skewX(20deg) scale(0.8);} }
 
+    /* Vertical Image Sizing Fix */
     .bounce-img { 
       width: auto; 
-      max-width: 90%; 
-      max-height: 40vh; 
+      max-width: 100%; 
+      max-height: 52vh; /* Adjusted to leave room for "YAY" and margins */
       border-radius: 20px; 
       animation: jelly 2s infinite; 
-      margin-top: 15px; 
-      object-fit: contain;
+      margin-top: 5px; 
+      object-fit: contain; /* Keeps aspect ratio without cropping */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
-    @keyframes jelly { 0%, 100% {transform:scale(1);} 50% {transform:scale(1.05, 0.95) translateY(-5px);} }
+    @keyframes jelly { 0%, 100% {transform:scale(1);} 50% {transform:scale(1.02, 0.98) translateY(-5px);} }
 
-    .timer { font-size: 12px; color: #999; margin-top: 15px; font-family: monospace; }
+    .timer { font-size: 12px; color: #999; margin-top: 10px; font-family: monospace; }
   </style>
 </head>
 <body>
@@ -160,9 +160,9 @@
       <button id="backBtn" style="width:100%; background:var(--text); color:white; margin-top:10px;">I am convinced!</button>
     </section>
 
-    <section id="view3" class="view-section hidden">
-      <h2 style="font-size: 2.2rem; color: var(--yes); margin-bottom: 10px;">YAY! ❤️</h2>
-      <img class="bounce-img" src="https://github.com/jute031005-cloud/Paras_valentine/blob/v3/assets/image_paras.png?raw=true" alt="Us" />
+    <section id="view3" class="view-section hidden" style="justify-content: flex-start; padding-top: 10px;">
+      <h2 style="font-size: 2.2rem; color: var(--yes); margin: 0 0 5px 0;">YAY! ❤️</h2>
+      <img class="bounce-img" src="https://github.com/jute031005-cloud/Paras_valentine/blob/v3/assets/WhatsApp%20Image%202026-02-03%20at%2022.40.27.jpeg?raw=true" alt="Us" />
     </section>
   </main>
 
@@ -174,7 +174,6 @@
     let noAttempts = 0;
     let yesScale = 1;
 
-    // Timer Logic
     const start = new Date();
     setInterval(() => {
       const diff = Math.floor((new Date() - start) / 1000);
@@ -184,16 +183,13 @@
       timerEl.innerText = `Waiting for: ${h}:${m}:${s}`;
     }, 1000);
 
-    // No Button Logic
     function moveNo() {
       noAttempts++;
       
-      // 1. Grow Yes Button
-      yesScale += 0.2; 
+      yesScale += 0.18; 
       yesBtn.style.setProperty('--s', yesScale);
       yesBtn.style.transform = `scale(${yesScale})`;
 
-      // 2. Hide No button eventually
       if (noAttempts >= 10) {
         noBtn.style.display = 'none';
         yesBtn.innerText = "PRESS ME! 🥺";
@@ -201,41 +197,32 @@
         return;
       }
 
-      // 3. Calculate Safe Position (No overlap with Yes)
       const zoneRect = zone.getBoundingClientRect();
       const yesRect = yesBtn.getBoundingClientRect();
       const noRect = noBtn.getBoundingClientRect();
 
       let newLeft, newTop;
       let safe = false;
-      const buffer = 10; // Space between buttons
+      const buffer = 15; 
 
-      // Try 50 times to find a safe spot
       for(let i = 0; i < 50; i++) {
-        // Random position within zone
         newLeft = Math.random() * (zoneRect.width - noRect.width);
         newTop = Math.random() * (zoneRect.height - noRect.height);
 
-        // Convert YesRect to relative coordinates within the zone
-        // We use getBoundingClientRect for size/current position, but need to compare relative to Zone
         const yesRelLeft = yesRect.left - zoneRect.left;
         const yesRelTop = yesRect.top - zoneRect.top;
         
-        // Check for overlap
-        // If the new No position is NOT overlapping the Yes position (with buffer)
         if (
-          newLeft + noRect.width < yesRelLeft - buffer || // Totally to the left
-          newLeft > yesRelLeft + yesRect.width + buffer || // Totally to the right
-          newTop + noRect.height < yesRelTop - buffer || // Totally above
-          newTop > yesRelTop + yesRect.height + buffer    // Totally below
+          newLeft + noRect.width < yesRelLeft - buffer || 
+          newLeft > yesRelLeft + yesRect.width + buffer || 
+          newTop + noRect.height < yesRelTop - buffer || 
+          newTop > yesRelTop + yesRect.height + buffer    
         ) {
           safe = true;
-          break; // Found a safe spot!
+          break; 
         }
       }
 
-      // If we couldn't find a safe spot (rare), we accept the overlap to prevent freezing
-      // Otherwise use the safe coordinates
       noBtn.style.left = newLeft + "px";
       noBtn.style.top = newTop + "px";
     }
@@ -243,7 +230,6 @@
     noBtn.addEventListener("mouseover", moveNo);
     noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNo(); });
 
-    // Navigation
     yesBtn.addEventListener("click", () => {
       document.getElementById("view1").classList.add("hidden");
       document.getElementById("view3").classList.remove("hidden");
@@ -263,7 +249,6 @@
       document.getElementById("view1").classList.remove("hidden");
     });
 
-    // Background Hearts
     setInterval(() => {
       const h = document.createElement("div");
       h.innerHTML = "❤️";
